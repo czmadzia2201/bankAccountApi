@@ -29,7 +29,7 @@ public class TransferService {
         SubAccount source = account.getSubAccountByCurrency(fromCurrency);
         double currentAmount = source.getAmount();
         if(currentAmount >= amount) {
-            source.setAmount(currentAmount-amount);
+            source.setAmount(currentAmount - amount);
             return true;
         }
         return false;

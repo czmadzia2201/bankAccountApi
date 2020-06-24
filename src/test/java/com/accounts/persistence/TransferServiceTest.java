@@ -26,34 +26,34 @@ class TransferServiceTest extends BaseTest {
     @Test
     public void testTransferPLNtoUSD() {
         transferService.transferMoney(fromAccount, toAccount, Currency.PLN, Currency.USD, 300.0);
-        assertExpectedValues(300.0, 1200.0, 700.0, 800.0, fromAccount, toAccount);
+        assertExpectedValues(300.0, 1200.0, 700.0, 800.0);
     }
 
     @Test
     public void testTransferUSDtoPLN() {
         transferService.transferMoney(fromAccount, toAccount, Currency.USD, Currency.PLN, 100.0);
-        assertExpectedValues(200.0, 1500.0, 600.0, 1100.0, fromAccount, toAccount);
+        assertExpectedValues(200.0, 1500.0, 600.0, 1100.0);
     }
 
     @Test
     public void testTransferUSDtoUSD() {
         transferService.transferMoney(fromAccount, toAccount, Currency.USD, Currency.USD, 100.0);
-        assertExpectedValues(200.0, 1500.0, 700.0, 800.0, fromAccount, toAccount);
+        assertExpectedValues(200.0, 1500.0, 700.0, 800.0);
     }
 
     @Test
     public void testTransferPLNtoPLN() {
         transferService.transferMoney(fromAccount, toAccount, Currency.PLN, Currency.PLN, 300.0);
-        assertExpectedValues(300.0, 1200.0, 600.0, 1100.0, fromAccount, toAccount);
+        assertExpectedValues(300.0, 1200.0, 600.0, 1100.0);
     }
 
     @Test
     public void testTransferCancelled() {
         transferService.transferMoney(fromAccount, toAccount, Currency.USD, Currency.PLN, 400.0);
-        assertExpectedValues(300.0, 1500.0, 600.0, 800.0, fromAccount, toAccount);
+        assertExpectedValues(300.0, 1500.0, 600.0, 800.0);
     }
 
-    private void assertExpectedValues(double fromUSD, double fromPLN, double toUSD, double toPLN, Account fromAccount, Account toAccount) {
+    private void assertExpectedValues(double fromUSD, double fromPLN, double toUSD, double toPLN) {
         assertEquals(fromUSD, fromAccount.getSubaccountUSD().getAmount());
         assertEquals(fromPLN, fromAccount.getSubaccountPLN().getAmount());
         assertEquals(toUSD, toAccount.getSubaccountUSD().getAmount());
