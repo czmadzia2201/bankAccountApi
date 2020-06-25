@@ -3,8 +3,8 @@ package com.accounts.model;
 import org.springframework.http.HttpStatus;
 
 public class RequestFailed {
-    HttpStatus status;
-    String message;
+    private HttpStatus status;
+    private String message;
 
     public RequestFailed(HttpStatus status, String message) {
         this.status = status;

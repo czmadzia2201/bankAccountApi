@@ -3,8 +3,8 @@ package com.accounts.model;
 import com.accounts.persistence.Currency;
 
 public class SubAccount {
-    Currency currency;
-    Double amount;
+    private Currency currency;
+    private Double amount;
 
     public SubAccount(Currency currency, Double amount) {
         this.currency = currency;
