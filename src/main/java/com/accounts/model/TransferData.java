@@ -16,6 +16,14 @@ public class TransferData {
     @NotNull
     private Double amount;
 
+    public TransferData(String fromPesel, String toPesel, Currency fromCurrency, Currency toCurrency, Double amount) {
+        this.fromPesel = fromPesel;
+        this.toPesel = toPesel;
+        this.fromCurrency = fromCurrency;
+        this.toCurrency = toCurrency;
+        this.amount = amount;
+    }
+
     public String getFromPesel() {
         return fromPesel;
     }

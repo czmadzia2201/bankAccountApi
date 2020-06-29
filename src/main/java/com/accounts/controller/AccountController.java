@@ -18,10 +18,10 @@ import java.util.List;
 public class AccountController {
 
     @Autowired
-    InMemoryRepo repository;
+    private InMemoryRepo repository;
 
     @Autowired
-    TransferService transferService;
+    private TransferService transferService;
 
     @GetMapping(value = "/accounts")
     public ResponseEntity<List<Account>> getAllAccounts() {
@@ -32,8 +32,8 @@ public class AccountController {
     public ResponseEntity getAccountByPesel(@PathVariable(value = "pesel") String pesel) {
         Account account = repository.getAccountByPesel(pesel);
         if (account==null) {
-            RequestFailed error = new RequestFailed(HttpStatus.NOT_FOUND, String.format("Account %s not found.", pesel));
-            return ResponseEntity.status(error.getStatus()).body(error);
+            RequestFailed requestFailed = new RequestFailed(HttpStatus.NOT_FOUND, String.format("Account %s not found.", pesel));
+            return new ResponseEntity(requestFailed, requestFailed.getStatus());
         }
         return new ResponseEntity(repository.getAccountByPesel(pesel), HttpStatus.OK);
     }
@@ -41,12 +41,12 @@ public class AccountController {
     @PostMapping(value = "/createaccount")
     public ResponseEntity createAccount(@Valid @RequestBody Account account, BindingResult result) {
         if(result.hasErrors()) {
-            RequestFailed error = new RequestFailed(HttpStatus.BAD_REQUEST, getErrorMessagesFromBindingResult(result));
-            return ResponseEntity.status(error.getStatus()).body(error);
+            RequestFailed requestFailed = new RequestFailed(HttpStatus.BAD_REQUEST, getErrorMessagesFromBindingResult(result));
+            return new ResponseEntity(requestFailed, requestFailed.getStatus());
         }
         if (repository.getAccountByPesel(account.getPesel())!=null) {
-            RequestFailed error = new RequestFailed(HttpStatus.CONFLICT, String.format("Account %s already exists. One user can only have one account.", account.getPesel()));
-            return ResponseEntity.status(error.getStatus()).body(error);
+            RequestFailed requestFailed = new RequestFailed(HttpStatus.CONFLICT, String.format("Account %s already exists. One user can only have one account.", account.getPesel()));
+            return new ResponseEntity(requestFailed, requestFailed.getStatus());
         }
         repository.createAccount(account);
         return new ResponseEntity(HttpStatus.CREATED);
@@ -55,19 +55,19 @@ public class AccountController {
     @PutMapping(value = "/transfermoney")
     public ResponseEntity transferMoney(@Valid @RequestBody TransferData transferData, BindingResult result) {
         if(result.hasErrors()) {
-            RequestFailed error = new RequestFailed(HttpStatus.BAD_REQUEST, getErrorMessagesFromBindingResult(result));
-            return ResponseEntity.status(error.getStatus()).body(error);
+            RequestFailed requestFailed = new RequestFailed(HttpStatus.BAD_REQUEST, getErrorMessagesFromBindingResult(result));
+            return new ResponseEntity(requestFailed, requestFailed.getStatus());
         }
         Account fromAccount = repository.getAccountByPesel(transferData.getFromPesel());
         Account toAccount = repository.getAccountByPesel(transferData.getToPesel());
         if(fromAccount==null || toAccount==null) {
-            RequestFailed error = new RequestFailed(HttpStatus.NOT_FOUND, "Account not found.");
-            return ResponseEntity.status(error.getStatus()).body(error);
+            RequestFailed requestFailed = new RequestFailed(HttpStatus.NOT_FOUND, "Account not found.");
+            return new ResponseEntity(requestFailed, requestFailed.getStatus());
         }
         boolean transferred = transferService.transferMoney(fromAccount, toAccount, transferData.getFromCurrency(), transferData.getToCurrency(), transferData.getAmount());
         if(!transferred) {
-            RequestFailed error = new RequestFailed(HttpStatus.BAD_REQUEST, "Not enough money on the source account.");
-            return ResponseEntity.status(error.getStatus()).body(error);
+            RequestFailed requestFailed = new RequestFailed(HttpStatus.BAD_REQUEST, "Not enough money on the source account.");
+            return new ResponseEntity(requestFailed, requestFailed.getStatus());
         }
         return new ResponseEntity(HttpStatus.OK);
     }
